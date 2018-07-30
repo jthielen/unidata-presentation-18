@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="reveal.js/css/reveal.css">
+        <link rel="stylesheet" href="reveal.js/css/theme/white.css">
+        <link rel="stylesheet" href="highlight.js/src/styles/androidstudio.css">
+        <style>
+            .flex {
+                display: flex;
+                justify-content: space-evenly;
+                align-content: center;
+            }
+            .column {
+                flex: 1;
+            }
+            .no-border {
+                border: none !important;
+                box-shadow: none !important;
+            }
+            h1, h2, h3, h4, h5, h6, p, section {
+                font-family: "xkcd script", sans !important;
+                text-transform: uppercase !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+
+                <section>
+                    <h2>Cross Sections in MetPy</h2>
+                    <h3>
+                        (with xarray...and xkcd)<br>
+                        Unidata Summer Internship 2018
+                    </h3>
+                    <p>Jon Thielen (with Ryan May and John Leeman)</p>
+                    <img class="no-border" src="images/working_on_computer.png">
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Working on MetPy</h2>
+                        <div class="flex">
+                            <div class="column">
+                                <ul>
+                                    <li class="fragment" data-fragment-index="2">Started contributing in Nov 17'</li>
+                                    <li class="fragment" data-fragment-index="3">Applied in Jan 18'</li>
+                                    <li class="fragment" data-fragment-index="4">Started internship in May</li>
+                                </ul>
+                            </div>
+                            <div class="column">
+                                <img class="no-border fragment" data-fragment-index="1" src="images/metpy_logo.jpg" style="width: 50%;">
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h2>Initial Plans</h2>
+                        <div class="flex">
+                            <div class="column fragment" data-markdown data-fragment-index="1">
+                                <script type="text/template">
+                                    - Grand ideas for automatic field calculation
+                                    - Incomplete state of xarray integration
+                                    - So there went that idea <!-- .element: class="fragment" data-fragment-index="2" -->
+                                </script>
+                            </div>
+                            <div class="column fragment" data-fragment-index="2">
+                                <img class="no-border" src="images/speculation.png">
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Another Plan: Cross Sections...</h3>
+                        <img class="no-border" src="images/gempak_cross.gif">
+                    </section>
+                    <section>
+                        <h3>...with xarray!</h3>
+                        <img class="no-border" src="images/knock.png">
+                    </section>
+                </section>
+
+                <section data-markdown>
+                    <script type="text/template">
+                        Markdown content
+                    </script>
+                </section>
+
+            </div>
+        </div>
+        <script src="reveal.js/lib/js/head.min.js"></script>
+        <script src="reveal.js/js/reveal.js"></script>
+        <script>
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                // More info https://github.com/hakimel/reveal.js#dependencies
+                dependencies: [
+                    { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'reveal.js/plugin/search/search.js', async: true },
+                    { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+                    { src: 'reveal.js/plugin/notes/notes.js', async: true }
+                ]
+            });
+        </script>
+    </body>
+</html>
