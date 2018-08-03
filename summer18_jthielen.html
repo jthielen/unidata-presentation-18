@@ -79,10 +79,369 @@
                     </section>
                 </section>
 
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## What is xarray?
+
+                            - Python package for n-dimensional labeled arrays <!-- .element: class="fragment" -->
+                            - "An in-memory representation of a netCDF file" <!-- .element: class="fragment" -->
+                            - The future of MetPy (from a data model point-of-view) <!-- .element: class="fragment" -->
+                        </script>
+                    </section>
+                    <section>
+                        <pre><code class="hljs python" data-trim>
+                            import xarray as xr
+                            data = xr.open_dataset('irma_gfs_example.nc')
+                            print(data)
+                        </code></pre>
+                    </section>
+                    <section>
+                        <pre><code data-trim>
+                            &lt;xarray.Dataset&gt;
+                            Dimensions:                              (isobaric1: 21, isobaric3: 31, latitude: 81, longitude: 131, time1: 9)
+                            Coordinates:
+                              * time1                                (time1) datetime64[ns] 2017-09-05T12:00:00 ...
+                                reftime                              datetime64[ns] ...
+                              * latitude                             (latitude) float32 50.0 49.5 49.0 ...
+                              * isobaric3                            (isobaric3) float64 100.0 200.0 ...
+                              * isobaric1                            (isobaric1) float64 1e+04 1.5e+04 ...
+                              * longitude                            (longitude) float32 250.0 250.5 ...
+                            Data variables:
+                                Vertical_velocity_pressure_isobaric  (time1, isobaric1, latitude, longitude) float32 ...
+                                Relative_humidity_isobaric           (time1, isobaric3, latitude, longitude) float32 ...
+                                Temperature_isobaric                 (time1, isobaric3, latitude, longitude) float32 ...
+                                u-component_of_wind_isobaric         (time1, isobaric3, latitude, longitude) float32 ...
+                                v-component_of_wind_isobaric         (time1, isobaric3, latitude, longitude) float32 ...
+                                Geopotential_height_isobaric         (time1, isobaric3, latitude, longitude) float32 ...
+                                LatLon_361X720-0p25S-180p00E         int32 ...
+                            Attributes:
+                                Originating_or_generating_Center:                                        ...
+                                Originating_or_generating_Subcenter:                                     ...
+                                GRIB_table_version:                                                      ...
+                                Type_of_generating_process:                                              ...
+                                Analysis_or_forecast_generating_process_identifier_defined_by_originating...
+                                Conventions:                                                             ...
+                                history:                                                                 ...
+                                featureType:                                                             ...
+                                History:                                                                 ...
+                                geospatial_lat_min:                                                      ...
+                                geospatial_lat_max:                                                      ...
+                                geospatial_lon_min:                                                      ...
+                                geospatial_lon_max:                                                      ...
+                        </code></pre>
+                    </section>
+                    <section>
+                        <pre><code class="hljs python" data-trim>
+                            heights = data['Geopotential_height_isobaric']
+                            heights.sel(time1='2017-09-06T00:00Z',
+                                        isobaric3=50000.)
+                        </code></pre>
+                    </section>
+                    <section>
+                        <pre><code data-trim>
+                            &lt;xarray.DataArray 'Geopotential_height_isobaric' (latitude: 81, longitude: 131)&gt;
+                            array([[5880.9595, 5878.8394, 5876.5195, ..., 5807.9194, 5809.3594, 5810.679 ],
+                                   [5884.5596, 5882.3994, 5879.9194, ..., 5821.2393, 5822.7593, 5824.119 ],
+                                   [5888.4395, 5885.7993, 5883.2393, ..., 5833.3193, 5834.8794, 5836.2793],
+                                   ...,
+                                   [5871.679 , 5871.719 , 5871.5996, ..., 5894.8394, 5894.5596, 5894.5195],
+                                   [5871.2393, 5871.159 , 5871.159 , ..., 5892.8794, 5893.159 , 5893.159 ],
+                                   [5870.5195, 5871.119 , 5870.7993, ..., 5891.119 , 5891.7993, 5891.8794]],
+                                  dtype=float32)
+                            Coordinates:
+                                time1      datetime64[ns] 2017-09-06
+                                reftime    datetime64[ns] ...
+                              * latitude   (latitude) float32 50.0 49.5 49.0 48.5 48.0 47.5 47.0 46.5 ...
+                                isobaric3  float64 5e+04
+                              * longitude  (longitude) float32 250.0 250.5 251.0 251.5 252.0 252.5 253.0 ...
+                            Attributes:
+                                long_name:                      Geopotential height @ Isobaric surface
+                                units:                          gpm
+                                Grib_Variable_Id:               VAR_0-3-5_L100
+                                Grib2_Parameter:                [0 3 5]
+                                Grib2_Parameter_Discipline:     Meteorological products
+                                Grib2_Parameter_Category:       Mass
+                                Grib2_Parameter_Name:           Geopotential height
+                                Grib2_Level_Type:               100
+                                Grib2_Level_Desc:               Isobaric surface
+                                Grib2_Generating_Process_Type:  Forecast
+                                grid_mapping:                   LatLon_361X720-0p25S-180p00E
+                        </code></pre>
+                    </section>
+                    <section>
+                        <pre><code class="hljs python" data-trim>
+                            data['Temperature_isobaric'].mean(
+                                ('time1', 'latitude', 'longitude'))
+                        </code></pre>
+                    </section>
+                    <section>
+                        <pre><code data-trim>
+                            &lt;xarray.DataArray 'Temperature_isobaric' (isobaric3: 31)&gt;
+                            array([259.4611 , 255.66313, 248.79195, 240.33334, 235.54622, 231.1286 ,
+                                   223.24205, 218.46536, 213.04253, 208.66364, 204.48088, 209.77391,
+                                   219.08775, 229.3075 , 238.7891 , 247.04654, 253.94908, 259.74255,
+                                   264.77377, 269.32214, 273.50998, 277.24646, 280.57074, 283.58157,
+                                   286.40454, 289.0842 , 291.59814, 292.82648, 294.26868, 295.83304,
+                                   297.45053], dtype=float32)
+                            Coordinates:
+                                reftime    datetime64[ns] ...
+                              * isobaric3  (isobaric3) float64 100.0 200.0 300.0 500.0 700.0 1e+03 2e+03 ...
+                        </code></pre>
+                    </section>
+                    <section>
+                        <pre><code class="hljs python" data-trim>
+                            (data['Temperature_isobaric'] -
+                             data['Temperature_isobaric'].mean(
+                                 ('time1', 'latitude', 'longitude')))
+                        </code></pre>
+                    </section>
+                    <section>
+                        <pre><code data-trim>
+                            &lt;xarray.DataArray 'Temperature_isobaric' (time1: 9, isobaric3: 31, latitude: 81, longitude: 131)&gt;
+                            array([[[[ -1.46109 , ...,  -1.161102],
+                                     ...,
+                                     [  1.738922, ...,  -1.161102]],
+
+                                    ...,
+
+                                    [[ -7.250519, ..., -10.750519],
+                                     ...,
+                                     [  1.749481, ...,   1.849457]]],
+
+
+                                   ...,
+
+
+                                   [[[ -1.661102, ...,  -2.861084],
+                                     ...,
+                                     [  3.03891 , ...,  -0.261078]],
+
+                                    ...,
+
+                                    [[ -4.150543, ..., -10.450531],
+                                     ...,
+                                     [  1.949463, ...,   1.949463]]]], dtype=float32)
+                            Coordinates:
+                              * time1      (time1) datetime64[ns] 2017-09-05T12:00:00 ...
+                                reftime    datetime64[ns] 2017-09-05T12:00:00
+                              * latitude   (latitude) float32 50.0 49.5 49.0 48.5 48.0 47.5 47.0 46.5 ...
+                              * isobaric3  (isobaric3) float64 100.0 200.0 300.0 500.0 700.0 1e+03 2e+03 ...
+                              * longitude  (longitude) float32 250.0 250.5 251.0 251.5 252.0 252.5 253.0 ...
+                        </code></pre>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## So what's missing?
+
+                            - Projection handling <!-- .element: class="fragment" -->
+                            - Systematic identification of variables/coordinates <!-- .element: class="fragment" -->
+                            - Units <!-- .element: class="fragment" -->
+                            - Meteorological calculations <!-- .element: class="fragment" -->
+                        </script>
+                    </section>
+                    <section>
+                        <img class="no-border" src="images/knock.png">
+                    </section>
+                </section>
+
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## xarray and MetPy
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Projection Handling
+
+                            ```python
+                            temperature = data.metpy.parse_cf('Temperature_isobaric')
+                            temperature.metpy.cartopy_crs
+                            ```
+
+                            ```markdown
+                            <cartopy.crs.PlateCarree object at 0x7f86c780e3b8>
+                            ```
+                        </script>
+                    </section>
+                    <section class="fig-container" data-file="webpages/pr786.html"></section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Systematic Identification of Coordinates
+
+                            ```python
+                            temperature = data.metpy.parse_cf('Temperature_isobaric')
+                            temperature.metpy.vertical
+                            ```
+
+                            ```markdown
+                            <xarray.DataArray 'isobaric3' (isobaric3: 31)>
+                            array([   100.,    200.,    300.,    500.,    700.,   1000.,   2000.,   3000.,
+                                     5000.,   7000.,  10000.,  15000.,  20000.,  25000.,  30000.,  35000.,
+                                    40000.,  45000.,  50000.,  55000.,  60000.,  65000.,  70000.,  75000.,
+                                    80000.,  85000.,  90000.,  92500.,  95000.,  97500., 100000.])
+                            Coordinates:
+                                reftime    datetime64[ns] 2017-09-05T12:00:00
+                                crs        object Projection: latitude_longitude
+                              * isobaric3  (isobaric3) float64 100.0 200.0 300.0 500.0 700.0 1e+03 2e+03 ...
+                            Attributes:
+                                units:     Pa
+                                positive:  down
+                                axis:      Z
+                            ```
+                        </script>
+                    </section>
+                    <section>
+                        <img class="no-border" src="images/perl_problems (regex).png">
+                    </section>
+                    <section class="fig-container" data-file="webpages/pr871.html"></section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Systematic Identification of Coordinates
+                        </script>
+                    </section>
+                    <section class="fig-container" data-file="webpages/issue886.html"></section>
+                    <section>
+                        <h3>Units</h3>
+                        <img class="no-border fragment" src="images/felsius.png">
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ```python
+                            temperature[0, -1].metpy.unit_array
+                            ```
+
+                            ```markdown
+                            [[290.2 289.7 289.2 ... 286.6 286.6 286.7]
+                             [289.7 289.7 289.6 ... 286.5 286.2 286.1]
+                             [289.6 289.4 289.6 ... 286.2 286.  286. ]
+                             ...
+                             [299.5 299.5 299.4 ... 299.9 300.  300.1]
+                             [299.2 299.2 299.1 ... 299.9 299.5 299.7]
+                             [299.2 298.9 298.8 ... 299.9 299.5 299.3]] kelvin
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ```python
+                            dew_point = mpcalc.dewpoint_rh(
+                                data['temperature'][0, -1],
+                                data['relative_humidity'][0, -1]
+                            ).to('degF')
+                            print(dew_point)
+                            ```
+
+                            ```markdown
+                            [[32.106335 34.216534 37.958862 ... 54.41962  54.06663  53.70743 ]
+                             [37.16378  37.290783 39.498154 ... 54.56085  53.85064  53.439037]
+                             [36.5536   37.554565 39.08699  ... 54.3687   53.896233 53.551098]
+                             ...
+                             [73.24063  73.3862   73.355545 ... 70.961296 70.89378  71.06687 ]
+                             [72.96811  73.04029  73.04425  ... 70.720695 70.78227  70.853355]
+                             [73.148285 72.76404  72.409294 ... 69.40728  70.028336 70.31717 ]] degF
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ```python
+                            (data['height'].sel(isobaric3=500) -
+                             data['height'].sel(isobaric3=1000))
+                            ```
+
+                            ```markdown
+                            <xarray.DataArray 'height' (time1: 9, latitude: 81, longitude: 131)>
+                            array([[[5643.725 , 5635.4604, ..., 5619.6846, 5617.981 ],
+                                    [5639.421 , 5635.045 , ..., 5630.989 , 5629.373 ],
+                                    ...,
+                                    [5778.173 , 5778.397 , ..., 5761.6445, 5763.4287],
+                                    [5777.149 , 5776.445 , ..., 5760.085 , 5760.773 ]],
+
+                                   [[5654.589 , 5647.1167, ..., 5637.925 , 5636.581 ],
+                                    [5649.821 , 5645.093 , ..., 5646.637 , 5645.485 ],
+                                    ...,
+                                    [5776.485 , 5775.877 , ..., 5766.0366, 5766.7407],
+                                    [5775.261 , 5774.6606, ..., 5764.285 , 5764.565 ]],
+
+                                   ...,
+
+                                   [[5697.8867, 5690.187 , ..., 5663.367 , 5662.067 ],
+                                    [5685.907 , 5683.6465, ..., 5665.8867, 5664.807 ],
+                                    ...,
+                                    [5774.787 , 5774.827 , ..., 5758.047 , 5758.007 ],
+                                    [5772.7866, 5772.527 , ..., 5756.2666, 5755.427 ]],
+
+                                   [[5695.9165, 5687.9966, ..., 5669.717 , 5668.557 ],
+                                    [5686.3965, 5683.0767, ..., 5673.1367, 5671.757 ],
+                                    ...,
+                                    [5775.257 , 5775.6367, ..., 5758.557 , 5759.1567],
+                                    [5772.817 , 5772.8164, ..., 5756.8765, 5756.777 ]]], dtype=float32)
+                            Coordinates:
+                              * time1      (time1) datetime64[ns] 2017-09-05T12:00:00 ...
+                                reftime    datetime64[ns] 2017-09-05T12:00:00
+                              * latitude   (latitude) float32 50.0 49.5 49.0 48.5 48.0 47.5 47.0 46.5 ...
+                              * longitude  (longitude) float32 250.0 250.5 251.0 251.5 252.0 252.5 253.0 ...
+                                crs        object Projection: latitude_longitude
+                            ```
+                        </script>
+                    </section>
+                    <section>
+                        <img class="no-border fragment" src="images/frustration.png">
+                    </section>
+                    <section>
+                        <h3>Meteorological Calculations</h3>
+                        <img class="no-border fragment" src="images/heat_index.png">
+                    </section>
+                    <section></section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>But what about cross sections?</h3>
+                        <img class="no-border fragment" src="images/short_answers_headscratch.png">
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            - Cross sections—a form of interpolation <!-- .element: class="fragment" -->
+                            - MetPy's interpolation was previously <!-- .element: class="fragment" -->
+                                - metpy.gridding <!-- .element: class="fragment" -->
+                                - a few functions in metpy.calc <!-- .element: class="fragment" -->
+                            - So... <!-- .element: class="fragment" -->
+                        </script>
+                    </section>
+                    <section class="fig-container" data-file="webpages/pr872.html"></section>
+                    <section>
+                        <h3 class="fragment">Finally, cross sections!</h3>
+                    </section>
+                    <section class="fig-container" data-file="webpages/slices.py.html"></section>
+                    <section>
+                        <img class="no-border" src="images/short_answers_headscratch.png">
+                    </section>
+                </section>
+
+                <section>
+                    <h2>Live Demo Time!</h2>
+                </section>
+
+                <section></section>
+
                 <section data-markdown>
                     <script type="text/template">
-                        Markdown content
+                        ## Thank You!
+
+                        - Ryan and John <!-- .element: class="fragment" -->
+                        - Sean <!-- .element: class="fragment" -->
+                        - Inken and Sheri <!-- .element: class="fragment" -->
+                        - Matt <!-- .element: class="fragment" -->
+                        - Ethan <!-- .element: class="fragment" -->
+                        - Everybody! <!-- .element: class="fragment" -->
                     </script>
+                </section>
+
+                <section>
+                    <img class="no-border fragment" src="images/software_development.png">
                 </section>
 
             </div>
@@ -106,7 +465,8 @@
                     { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
                     { src: 'reveal.js/plugin/search/search.js', async: true },
                     { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
-                    { src: 'reveal.js/plugin/notes/notes.js', async: true }
+                    { src: 'reveal.js/plugin/notes/notes.js', async: true },
+                    { src: 'reveal.js-d3/reveald3.js' },
                 ]
             });
         </script>
