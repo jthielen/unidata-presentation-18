@@ -2,9 +2,9 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="reveal.js/css/reveal.css">
-        <link rel="stylesheet" href="reveal.js/css/theme/white.css">
-        <link rel="stylesheet" href="highlight.js/src/styles/androidstudio.css">
+        <link rel="stylesheet" href="lib/reveal.css">
+        <link rel="stylesheet" href="lib/theme/white.css">
+        <link rel="stylesheet" href="lib/androidstudio.css">
         <style>
             .flex {
                 display: flex;
@@ -456,8 +456,8 @@
 
             </div>
         </div>
-        <script src="reveal.js/lib/js/head.min.js"></script>
-        <script src="reveal.js/js/reveal.js"></script>
+        <script src="lib/head.min.js"></script>
+        <script src="lib/reveal.js"></script>
         <script>
             Reveal.initialize({
                 controls: true,
@@ -469,14 +469,14 @@
 
                 // More info https://github.com/hakimel/reveal.js#dependencies
                 dependencies: [
-                    { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                    { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                    { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                    { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-                    { src: 'reveal.js/plugin/search/search.js', async: true },
-                    { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
-                    { src: 'reveal.js/plugin/notes/notes.js', async: true },
-                    { src: 'reveal.js-d3/reveald3.js' },
+                    { src: 'lib/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'lib/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'lib/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'lib/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'lib/plugin/search/search.js', async: true },
+                    { src: 'lib/plugin/zoom-js/zoom.js', async: true },
+                    { src: 'lib/plugin/notes/notes.js', async: true },
+                    { src: 'lib/reveald3.js' },
                 ]
             });
         </script>
